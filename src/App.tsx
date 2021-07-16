@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
 import OutageCard from "./components/OutageCard";
 import updateOutages from "./controller/outage_api";
@@ -11,12 +11,15 @@ import Jumbotron from "react-bootstrap/Jumbotron";
 import Form from "react-bootstrap/Form";
 import { usePrevious } from "./hooks/usePrevious";
 import { OutageNotifier } from "./components/OutageNotifier";
+import { Navbar } from "react-bootstrap";
+import { LicenseModal } from "./components/LicenseModal";
 
 function App() {
   const [outages, setOutages] = React.useState<Outage[] | undefined>();
   const prevOutages = usePrevious(outages);
   const [refresh, setRefresh] = React.useState(0);
   const [useOld, setUseOld] = React.useState(false);
+  const [showModal, setShowModal] = useState(false);
   React.useEffect(() => {
     updateOutages(setOutages);
     setTimeout(
@@ -26,6 +29,7 @@ function App() {
   }, [refresh]);
   return (
     <Container fluid className="p-0">
+      <LicenseModal showModal={showModal} setShowModal={setShowModal} />
       <Jumbotron fluid>
         <Container>
           <h1>Eyvah, Su Kesildi!</h1>
@@ -58,6 +62,32 @@ function App() {
           </CardColumns>
         </Col>
       </Row>
+      <Navbar fixed="bottom">
+        <Navbar.Text
+          style={{
+            marginLeft: "auto",
+            marginRight: "auto",
+          }}
+        >
+          Ege Emir Özkan |
+          <a href="https://github.com/ambertide/eyvah-su-kesildi">
+            {" "}
+            {"GitHub Linki "}
+          </a>
+          |
+          <button
+            style={{
+              border: "none",
+              background: "none",
+            }}
+            onClick={() => {
+              setShowModal(true);
+            }}
+          >
+            {" Lisanslar"}
+          </button>
+        </Navbar.Text>
+      </Navbar>
     </Container>
   );
 }
